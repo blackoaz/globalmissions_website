@@ -1,0 +1,199 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <title>{% block title %}Global Mission Services - {% endblock %}</title>
+    <style>
+         :root {
+            --gms-green: #009651;
+            --footer-dark-green: #01260b;
+            --gms-orange: #f26522;
+            --gms-orange-light: #f8c0a0;
+            --gms-dark: #333;
+            --gms-light-gray: #f8f9fa;
+            --gms-white: #fff;
+            --gms-section-bg: #fbf7ea;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--gms-dark);
+            line-height: 1.6;
+            background-color: var(--gms-white);
+        }
+
+        /* --- Header Navigation --- */
+        header {
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 90px;
+            padding-right: 5%;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+
+        .logo-area {
+            display: flex;
+            height: 100%;
+            align-items: center;
+        }
+
+        /* Green Slanted Box */
+        .logo-green {
+            background-color: var(--gms-green);
+            height: 100%;
+            width: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            clip-path: polygon(0% 0%, 80% 0%, 100% 100%, 0% 100%);
+            z-index: 3;
+            padding-right: 20px;
+        }
+        .gms-logo img{
+            height: 80px;
+            width: auto;
+        }
+
+        /* Orange Slanted Box */
+        .logo-orange {
+            background-color: var(--gms-orange-light);
+            height: 100%;
+            width: 200px;
+            margin-left: -180px;
+            clip-path: polygon(0% 0%, 80% 0%, 100% 100%, 0% 100%);
+            z-index: 2;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #444;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--gms-green);
+        }
+
+        /* Donate Button with Icon Circle */
+        .btn-donate {
+            background-color: var(--gms-green);
+            color: white !important;
+            padding: 12px 25px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: bold !important;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+
+        .btn-donate:hover {
+            background-color: #007a41;
+        }
+
+        .icon-circle {
+            background: white;
+            color: var(--gms-green);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        footer {
+            background-color: var(--footer-dark-green);
+            padding: 50px 10% 20px;
+            border-top: 1px solid #ddd;
+            margin-top: 50px;
+        }
+        footer img{
+            height: 200px;
+            width: auto;
+        }
+        .footer-content {
+            display: grid;
+            /*grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));**/
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+        footer h4 { color: var(--gms-green); margin-bottom: 15px; }
+        footer a { text-decoration: none; color: #666; }
+        .copyright {
+            text-align: center; font-size: 0.85rem; color: #999;
+            border-top: 1px solid #eee; padding-top: 20px;
+        }
+
+        @media (max-width: 1024px) {
+            .nav-links { display: none; }
+            .hero h2 { font-size: 2.8rem; }
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <header>
+        <div class="logo-area">
+            <div class="logo-green">
+                <div class="gms-logo">
+                    <img src="{% static 'images/Logo-Final-v2.png' %}" alt="GMS-K Logo" srcset="">
+                </div>
+            </div>
+            <div class="logo-orange"></div>
+        </div>
+        
+        <nav>
+            <ul class="nav-links">
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'about' %}">Who We Are</a></li>
+                <li><a href="{% url 'what_we_do' %}">What We Do</a></li>
+                <li><a href="{% url 'blogs' %}">Blogs</a></li>
+                <li><a href="{% url 'partners' %}">Partner With Us</a></li>
+                <li><a href="{% url 'contacts' %}">Contact</a></li>
+            </ul>
+        </nav>
+        <div>
+             <a href="#" class="btn-donate">
+                <span class="icon-circle">➜</span> Donate Now
+            </a>
+        </div>
+    </header>
+    {% block content %}{% endblock %}
+    {% block extra_js %}{% endblock %}
+
+    {% include "home/footer.html" %}
+    
+</body>
+</html>

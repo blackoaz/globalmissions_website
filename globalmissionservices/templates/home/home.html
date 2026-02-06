@@ -1,0 +1,1022 @@
+{% extends "home/base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+    .hero {
+        position: relative;
+        height: 85vh;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        padding: 0 10%;
+        color: white;
+        margin: 20px;
+    }
+
+    .hero-slider {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        width: 200%;
+        transition: transform 2.0s cubic-bezier(0.65, 0, 0.35, 1);
+        z-index: 1;
+    }
+
+    .slide {
+        width: 50%;
+        height: 100%;
+        background-size: cover;
+        background-position: center;
+    }
+
+    .slide:nth-child(1) {
+        background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+        url("{% static 'images/image-5.jpeg' %}");
+    }
+
+    .slide:nth-child(2) {
+        background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+        url("{% static 'images/picture2.png' %}");
+    }
+
+    /* --- Text Animations --- */
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        max-width: 650px;
+    }
+
+    .text-slide {
+        display: none;
+        flex-direction: column;
+        margin-top: 250px;
+    }
+
+    .text-slide.active {
+        display: flex;
+    }
+
+    /* Animation: Slide up from bottom */
+    .text-slide.active .hero-badge,
+    .text-slide.active h3,
+    .text-slide.active p {
+        animation: fadeInUp 1s ease forwards;
+        opacity: 0;
+    }
+
+    .text-slide.active .hero-badge {
+        animation-delay: 0.3s;
+    }
+
+    .text-slide.active h3 {
+        animation-delay: 0.5s;
+    }
+
+    .text-slide.active p {
+        animation-delay: 0.7s;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(40px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Re-adding Typography basics */
+    .hero h3 {
+        font-size: 2rem;
+        font-weight: 800;
+        line-height: 1.1;
+        margin: 0;
+    }
+
+    .hero-badge {
+        color: var(--gms-orange);
+        border: 1px solid var(--gms-orange);
+        padding: 5px 20px;
+        border-radius: 50px;
+        width: fit-content;
+        margin-bottom: 20px;
+        font-weight: bold;
+    }
+
+    .slider-title, .slider-pargraph{
+        margin: 0px 0 24px 0px;
+    }
+    /* overlay background */
+    .overlay-color {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: 2;
+        width: 100vw;
+        height: 100vh;
+    }
+    .stripe-container {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+    .stripe {
+        position: absolute;
+        background: rgba(255, 255, 255, 0.1);
+        width: 150px;
+        height: 150%;
+        clip-path: polygon(25% 0%, 100% 0%, 75% 100%, 0% 100%);
+        transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1), opacity 1s;
+        opacity: 0;
+    }
+
+    /* Top Left - Sliding down/right */
+    .stripe.tl {
+        top: -10%;
+        left: -5%;
+        transform: translate(-100%, -100%);
+    }
+
+    /* Set 2: Bottom Right - Sliding up/left */
+    .stripe.br {
+        top: auto;
+        left: auto;
+        bottom: -10%;
+        right: -5%;
+        transform: translate(100%, 100%);
+    }
+
+    /* Staggered positioning for the 3 stripes */
+    .stripe-2 { margin-left: 180px; margin-top: -50px; opacity: 0.07; }
+    .stripe-3 { margin-left: 360px; margin-top: -100px; opacity: 0.04; }
+
+    .stripe.br.stripe-2 { margin-right: 180px; margin-bottom: -50px; }
+    .stripe.br.stripe-3 { margin-right: 360px; margin-bottom: -100px; }
+
+    /* --- Animation Trigger --- */
+    .hero.animating .stripe {
+        transform: translate(0, 0);
+        opacity: 0.15;
+    }
+
+    /* Specific GMS Brand colors for first stripes */
+    .stripe-1.tl { background: linear-gradient(to bottom, var(--gms-green), transparent); opacity: 0.2; }
+    .stripe-1.br { background: linear-gradient(to top, var(--gms-orange), transparent); opacity: 0.2; }
+
+    /* --- Impacts Section Container --- */
+    .impacts .impact-counts,
+    .impacts .mis-vis {
+    opacity: 0;
+    transform: translateY(100px);
+    transition: all 1.2s cubic-bezier(0.25, 1, 0.5, 1);
+    min-height: 420px;
+
+    }
+
+    .impacts.reveal .impact-counts,
+    .impacts.reveal .mis-vis {
+    opacity: 1;
+    transform: translateY(0);
+    }
+
+    .impacts.reveal .mis-vis {
+    transition-delay: 0.2s;
+        }
+    .impacts {
+        display: flex;
+        gap: 20px;
+        margin: 40px 5%;
+        height: 80vh;
+        height: auto;
+        align-items: stretch;
+    }
+
+    .impacts .impact-counts {
+        width: 45%;
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), 
+                    url("{% static 'images/image-3.jpeg' %}") no-repeat center center;
+        background-size: cover;
+    }
+
+    /* Floating Card Base */
+    .impact-counts .card {
+        position: absolute;
+        background-color: rgba(0, 150, 81, 0.85);
+        border-bottom-left-radius: 12px;
+        border-bottom-right-radius: 12px;
+        padding: 30px 20px 20px;
+        color: white;
+        width: 45%;
+        min-height: 160px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+
+    .card-1 { top: 5%; left: 3%; }
+    .card-2 { top: 5%; right: 3%; }
+    .card-3 { bottom: 20%; left: 27%; }
+
+    [class^="count-icon-"] {
+        position: absolute;
+        top: -40px;
+        right: 15px;
+        background-color: white;
+        border-radius: 50%;
+        height: 60px;
+        width: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--gms-green);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        z-index: 5;
+    }
+
+    .card h4 { font-size: 1.8rem; margin: 0; }
+    .card p { font-size: 0.85rem; font-weight: 400; line-height: 1.2; margin-top: 5px; }
+
+    .impacts .mis-vis {
+        width: 55%;
+        background-color: var(--gms-section-bg); 
+        padding: 50px;
+        color: #000000;
+        position: relative;
+        z-index: 2;
+    }
+
+    .mis-vis .mis-vis-content h3 { color: #1a3a2a; font-size: 1.5rem; margin-bottom: 20px; }
+    .mis-vis .intro-text { color: #666; margin-bottom: 40px; }
+
+    .mv-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+    }
+
+    .mv-item h3 { color: #1a3a2a; margin-bottom: 10px; }
+    .mv-item p { font-size: 0.95rem; color: #555; }
+
+    .mission-icon,.vision-icon {
+            background: url("{% static 'images/polygon-icon.png' %}");
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            color: var(--gms-white);
+            flex-shrink: 0;
+            height: 60px;
+            width: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;    
+    } 
+
+    .vision-icon i, .mission-icon i,.count-icon-2 i, .count-icon-1 i, .count-icon-3 i {
+        font-size: 1.8rem; 
+        display: block; 
+    }
+
+    .vision-cont, .mission-cont {
+        display: flex;
+        flex-direction: row;
+        gap: 8px;
+        align-items: center;
+        text-align: center;
+        justify-content: center;
+    }
+
+    .heart-print {
+        position: absolute;
+        bottom: -25px;
+        left: 650px;
+        transform: translateX(-15%);
+        z-index: 1;
+    }
+
+    /* impact - responsiveness */
+    @media (max-width: 1024px) {
+    .impacts {
+        flex-direction: column;
+        margin: 40px 3%;
+    }
+
+    .impacts .impact-counts,
+    .impacts .mis-vis {
+        width: 100%;
+    }
+
+    /* Reposition floating cards */
+    .impact-counts .card {
+        width: 42%;
+    }
+
+    .card-1 { top: 10%; left: 5%; }
+    .card-2 { top: 10%; right: 5%; }
+    .card-3 { bottom: 10%; left: 29%; }
+
+    .heart-print {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    }
+
+    @media (max-width: 768px) {
+
+    /* SECTION SPACING */
+    .impacts {
+        gap: 40px;
+    }
+
+    /* =====================
+       IMPACT COUNTS
+    ====================== */
+    .impacts .impact-counts {
+        padding: 30px 20px;
+    }
+
+    .impact-counts .card {
+        position: relative;
+        width: 100%;
+        margin-bottom: 50px;
+    }
+
+    .card-1,
+    .card-2,
+    .card-3 {
+        top: auto;
+        left: auto;
+        right: auto;
+        bottom: auto;
+    }
+
+    /* =====================
+       MIS / VIS CONTENT
+    ====================== */
+    .impacts .mis-vis {
+        padding: 40px 25px;
+    }
+
+    .mv-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+
+    .mission-cont,
+    .vision-cont {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .heart-print {
+        position: relative;
+        bottom: auto;
+        left: auto;
+        transform: none;
+        margin-top: 30px;
+        text-align: center;
+    }
+
+    .heart-print img {
+        max-width: 200px;
+        opacity: 0.15;
+        }
+    }
+
+    @media (max-width: 480px) {
+
+    .card h4 {
+        font-size: 1.5rem;
+    }
+
+    .card p {
+        font-size: 0.9rem;
+    }
+
+    .mis-vis .mis-vis-content h3 {
+        font-size: 1.3rem;
+    }
+}
+
+
+
+
+    /* --- Success Targets Section --- */
+    .success-targets {
+        padding: 60px 5%;
+        background-color: var(--gms-section-bg);
+    }
+
+    .targets-container {
+        border-radius: 30px;
+        display: flex;
+        align-items: center;
+        position: relative;
+        padding: 50px;
+        overflow: visible;
+    }
+
+    .targets-content {
+        width: 65%;
+        text-align: center;
+    }
+
+    .section-title {
+        color: #1a3a2a;
+        font-size: 2rem;
+        margin-bottom: 40px;
+    }
+
+    .targets-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+        margin-bottom: 40px;
+    }
+
+    .target-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .target-item i {
+        font-size: 2.5rem;
+        color: var(--gms-green);
+    }
+
+    .target-item p {
+        font-weight: 600;
+        color: #333;
+        font-size: 0.95rem;
+    }
+
+    .read-more-btn {
+        background-color: var(--gms-green);
+        color: white;
+        padding: 12px 30px;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: bold;
+        display: inline-block;
+        transition: transform 0.3s;
+    }
+
+    .read-more-btn:hover {
+        transform: scale(1.05);
+        background-color: #008f47;
+    }
+
+    /* Circular Image Styling */
+    .targets-image-wrap {
+        width: 35%;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+
+    .circular-frame {
+        width: 380px;
+        height: 500px;
+        border-radius: 250px;
+        overflow: hidden;
+        position: relative;
+        border: 8px solid white; 
+        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
+
+    .circular-frame img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .targets-image-wrap {
+        position: relative;
+        padding: 20px;
+    }
+
+    .targets-image-wrap::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border: 2px dashed var(--gms-orange);
+        border-radius: 260px;
+        margin: -10px;
+        pointer-events: none;
+    }
+
+
+    
+    /* IMPACT SECTION */
+
+        .difference-section {
+            padding: 80px 6%;
+            background: #fff;
+        }
+
+        .difference-section h2 {
+            text-align: center;
+            font-size: 2.2rem;
+            color: var(--gms-dark);
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin: 10px 0 50px;
+        }
+
+        /*WRAPPER & SLIDER*/
+
+        .impact-wrapper {
+            display: flex;
+            align-items: center;
+            position: relative;
+            width: 100%;
+        }
+
+        .impact-slider {
+            display: flex;
+            gap: 24px;
+            width: 100%;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            padding: 20px 0;
+        }
+
+        /* Hide scrollbar */
+        .impact-slider::-webkit-scrollbar {
+            display: none;
+        }
+
+        .impact-slider {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /*NAVIGATION ARROWS*/
+
+        .nav-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: none;
+            background: #fff;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            cursor: pointer;
+            font-size: 1.4rem;
+            color: var(--gms-green);
+            z-index: 5;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: var(--gms-green);
+            color: #fff;
+        }
+
+        .nav-btn.left {
+            margin-right: 12px;
+        }
+
+        .nav-btn.right {
+            margin-left: 12px;
+        }
+
+        /*CARD*/
+
+        .impact-card {
+            min-width: 300px;
+            max-width: 320px;
+            background: #fff;
+            padding: 30px 25px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+
+        .impact-card:hover {
+            transform: translateY(-6px);
+        }
+
+        /* CARD NUMBER*/
+
+        .number {
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: #dfe7e4;
+        }
+
+        /*ICON*/
+
+        .icon-wrapper {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--gms-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s ease;
+        }
+
+        .icon {
+            font-size: 1.4rem;
+            color: var(--gms-green);
+        }
+
+        /* Active + Hover States */
+        .impact-card.active .icon-wrapper,
+        .impact-card:hover .icon-wrapper {
+            background: var(--gms-green);
+        }
+
+        .impact-card.active .icon,
+        .impact-card:hover .icon {
+            color: #fff;
+        }
+
+        .impact-card h4 {
+            margin: 20px 0 10px;
+            color: var(--gms-dark);
+        }
+
+        .impact-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .difference-section {
+                padding: 60px 20px;
+            }
+
+            .impact-card {
+                min-width: 260px;
+            }
+        }
+
+    
+
+    /* --- Responsive section --- */
+
+    /* Targets Section */
+    @media (max-width: 1024px) {
+        .targets-container {
+            flex-direction: column;
+            padding: 40px 20px;
+        }
+
+        .targets-content {
+            width: 100%;
+            margin-bottom: 50px;
+        }
+
+        .targets-image-wrap {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .circular-frame {
+            width: 300px;
+            height: 400px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .targets-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .section-title {
+            font-size: 1.6rem;
+        }
+
+        .target-item i {
+            font-size: 2rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .targets-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .circular-frame {
+            width: 250px;
+            height: 350px;
+        }
+    }
+   
+
+</style>
+{% endblock %}
+
+{% block content %}
+<main>
+    <section class="hero">
+        <div class="overlay-color"></div>
+
+        <div class="stripe-container">
+            <div class="stripe tl stripe-1"></div>
+            <div class="stripe tl stripe-2"></div>
+            <div class="stripe tl stripe-3"></div>
+
+            <div class="stripe br stripe-1"></div>
+            <div class="stripe br stripe-2"></div>
+            <div class="stripe br stripe-3"></div>
+        </div>
+        <div class="hero-slider">
+            <div class="slide active"></div>
+            <div class="slide"></div>
+        </div>
+
+        <div class="hero-content">
+            <div class="slider-sec">
+                <div class="text-slide active">
+                    <span class="hero-badge">Changing The World With Love and Compassion</span>
+                     <div class="slider-title">
+                        <h3>An Oasis of Gods Love</h3>
+                        <h3>In The Desert of Life</h3>
+                    </div>
+                    <div class="slider-pargraph">
+                        <p>
+                        We are commited to creating communities where every child
+                        can thrive-free from hunger,harm and limitation.
+                        </p>
+                    </div>
+                    
+                </div>
+
+                <div class="text-slide">
+                    <span class="hero-badge">Changing The World With Love and Compassion</span>
+                    <div class="slider-title">
+                        <h3>An Oasis of Gods Love</h3>
+                        <h3>In The Desert of Life</h3>
+                    </div>
+                    <div class="slider-pargraph">
+                        <p>
+                            We fight against ongoing famine, food shortages, and the harmful practice
+                            of female genital mutilation (FGM), ensuring children—especially girls—can grow
+                            in dignity and hope. Through food and compassion, we share the love of Christ
+                            and nurture holistic growth for all.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </section>
+
+    <section class="impacts">
+        <div class="impact-counts">
+            <div class="card card-1">
+                <div class="count-icon-1">
+                    <i class="fa-solid fa-droplet"></i> 
+                </div>
+                <h4>1,200+</h4>
+                <p>Water crisis statistics by number of families</p>
+            </div>
+            
+            <div class="card card-2">
+                <div class="count-icon-2"><i class="fa-solid fa-person-walking"></i></div>
+                <h4>4+</h4>
+                <p>Kilometers walk in search of water</p>
+            </div>
+            
+            <div class="card card-3">
+                <div class="count-icon-3"><i class="fa-solid fa-hand-holding-heart"></i></div>
+                <h4>765+</h4>
+                <p>Number of girls above puberty age lacking hygiene knowledge</p>
+            </div>
+        </div>
+
+        <div class="mis-vis">
+            <div class="mis-vis-content">
+                <h3>Meeting Present Needs for Lasting Impact</h3>
+                <p class="intro-text">At Global Mission Services, 
+                    we are committed to nurturing brighter futures 
+                    by addressing today’s most urgent challenges. 
+                    Through initiatives like school feeding programs 
+                    and menstrual hygiene education, we empower children—especially 
+                    those from underserved communities—to learn, grow, and dream without limits.
+                    Together, we cultivate caring communities where every 
+                    child’s potential can truly flourish.
+                </p>
+                
+                <div class="mv-grid">
+                    <div class="mission-cont">
+                        <div class="mission-icon"><i class="fa-solid fa-hands-holding-heart"></i></div>
+                        <div class="mv-item">
+                            <h3>Our Vision</h3>
+                            <p>To empower communities where every child has the opportunity to realize their dreams, access essential rights, and attain their full potential.</p>
+                        </div>
+                    </div>
+                    <div class="vision-cont">
+                        <div class="vision-icon"><i class="fa-solid fa-hand-holding-dollar"></i></div>
+                        <div class="mv-item">
+                        <h3>Our Mission</h3>
+                        <p>To empower communities to provide every child with the opportunities, care, and resources they need with love to thrive.</p>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            <div class="heart-print">
+                    <img src="{% static 'images/bg-12.png' %}" alt="" srcset="">
+            </div>
+        
+        </div>
+    </section>
+
+    <section class="success-targets">
+        <div class="targets-container">
+            <div class="targets-content">
+                <h2 class="section-title">The care for today that brightens tomorrow</h2>
+                
+                <div class="targets-grid">
+                    <div class="target-item">
+                        <i class="fa-solid fa-share-nodes"></i>
+                        <p>Hot Spot of Love and Hope</p>
+                    </div>
+                    <div class="target-item">
+                        <i class="fa-solid fa-person-dress"></i>
+                        <p>Women and girls Empowerment</p>
+                    </div>
+                    <div class="target-item">
+                        <i class="fa-solid fa-apple-whole"></i>
+                        <p>Hunger Management</p>
+                    </div>
+                    <div class="target-item">
+                        <i class="fa-solid fa-users-viewfinder"></i>
+                        <p>Community Partnership</p>
+                    </div>
+                    <div class="target-item">
+                        <i class="fa-solid fa-tree"></i>
+                        <p>Environmental Conservation</p>
+                    </div>
+                    <div class="target-item">
+                        <i class="fa-solid fa-bottle-water"></i>
+                        <p>School Wash</p>
+                    </div>
+                </div>
+
+                <a href="#" class="read-more-btn">Click to read more >>></a>
+            </div>
+
+            <div class="targets-image-wrap">
+                <div class="circular-frame">
+                    <img src="{% static 'images/Picture2.png' %}" alt="Community Support">
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="difference-section">
+    <h2>How we Make A Difference</h2>
+    <p class="subtitle">
+        We endeavor to enhance school attendance, health, and learning outcomes
+    </p>
+
+    <div class="impact-wrapper">
+        <button class="nav-btn left" id="prevBtn">&#10094;</button>
+
+        <div class="impact-slider" id="impactSlider">
+            <div class="impact-card active">
+                <div class="icon-wrapper"><span class="icon">🍽️</span></div>
+                <span class="number">01</span>
+                <h4>School Feeding Program</h4>
+                <p>Providing nutritious daily meals to combat hunger.</p>
+            </div>
+
+            <div class="impact-card">
+                <div class="icon-wrapper"><span class="icon">🚰</span></div>
+                <span class="number">02</span>
+                <h4>School WASH</h4>
+                <p>Access to clean water and sanitation facilities.</p>
+            </div>
+
+            <div class="impact-card">
+                <div class="icon-wrapper"><span class="icon">🌸</span></div>
+                <span class="number">03</span>
+                <h4>Menstrual Hygiene Management</h4>
+                <p>Empowering girls through MHM education.</p>
+            </div>
+
+            <div class="impact-card">
+                <div class="icon-wrapper"><span class="icon">🤝</span></div>
+                <span class="number">04</span>
+                <h4>Community Empowerment</h4>
+                <p>Building local capacity and partnerships.</p>
+            </div>
+        </div>
+
+        <button class="nav-btn right" id="nextBtn">&#10095;</button>
+    </div>
+    </section>
+
+
+
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const heroSection = document.querySelector('.hero');
+    const sliderTrack = document.querySelector('.hero-slider');
+    const textSlides = document.querySelectorAll('.text-slide');
+    let currentSlide = 0;
+    const totalSlides = textSlides.length;
+
+    function triggerAnimations() {
+        heroSection.classList.remove('animating');
+        void heroSection.offsetWidth; 
+        heroSection.classList.add('animating');
+    }
+
+    function moveSlide() {
+        currentSlide++;
+        if (currentSlide >= totalSlides) {
+            currentSlide = 0;
+        }
+        const offset = currentSlide * 50; 
+        sliderTrack.style.transform = `translateX(-${offset}%)`;
+        textSlides.forEach((slide, index) => {
+            slide.classList.toggle('active', index === currentSlide);
+        });
+        triggerAnimations();
+    }
+    window.addEventListener('DOMContentLoaded', () => {
+        triggerAnimations();
+        setInterval(moveSlide, 6000);
+    });
+
+    // Impacts Section Reveal on Scroll
+    document.addEventListener("DOMContentLoaded", function() {
+    const observerOptions = {
+        threshold: 0.2 // Trigger when 20% of the section is visible
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('reveal');
+                // Optional: stop observing once it has animated
+                observer.unobserve(entry.target); 
+            }
+        });
+    }, observerOptions);
+
+    const target = document.querySelector('.impacts');
+    if (target) {
+        observer.observe(target);
+    }
+    });
+
+    // Difference Section Slider
+        const slider = document.getElementById('impactSlider');
+        const nextBtn = document.getElementById('nextBtn');
+        const prevBtn = document.getElementById('prevBtn');
+
+        function updateActive() {
+            const cards = slider.querySelectorAll('.impact-card');
+            cards.forEach(card => card.classList.remove('active'));
+            cards[1].classList.add('active'); // center card
+        }
+
+        // Move RIGHT
+        nextBtn.addEventListener('click', () => {
+            const first = slider.firstElementChild;
+            slider.appendChild(first);
+            updateActive();
+        });
+
+        // Move LEFT
+        prevBtn.addEventListener('click', () => {
+            const last = slider.lastElementChild;
+            slider.insertBefore(last, slider.firstElementChild);
+            updateActive();
+        });
+
+        // Initial state
+        updateActive();
+    
+</script>
+
+
+
+{% endblock %}
