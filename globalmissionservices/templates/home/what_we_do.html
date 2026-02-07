@@ -4,11 +4,699 @@
 {% block title %}What We Do - Global Mission Services{% endblock %}
 
 {% block extra_css %}
+<style>
+ 
+ .what-we-do {
+    background: url("{% static 'images/image-1.jpeg' %}") top center / cover no-repeat;
+    background-attachment: fixed;
+    }
+
+
+    @media (max-width: 768px) {
+        .what-we-do {
+            background-attachment: scroll;
+        }
+    }
+
+    .banner-content {
+        background-color: rgba(0, 0, 0, 0.55);
+        padding: 60px 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 400px;
+        text-align: center;
+    }
+
+    /* Hero title */
+    .banner-content h3 {
+        color: var(--gms-light-green);
+        font-size: 1.8rem;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+    }
+
+    .focus-area {
+        background-color: var(--gms-white);
+        padding-bottom: 40px;
+    }
+
+    .title-sec {
+        padding: 40px 20px 20px;
+        text-align: center;
+    }
+
+    .focus-box {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        margin: 24px;
+        align-items: stretch;
+    }
+
+    .focus-photos img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .focus-content {
+        background-color: lightblue;
+        padding: 24px;
+        border-radius: 12px;
+    }
+
+    /* ===== Focus box animations ===== */
+    .slide-from-top,
+    .slide-from-bottom {
+        opacity: 0;
+        transition: transform 0.9s ease-in-out, opacity 0.9s ease-in-out;
+    }
+
+    /* Initial states */
+    .slide-from-top {
+        transform: translateY(-100px);
+    }
+
+    .slide-from-bottom {
+        transform: translateY(100px);
+    }
+
+    /* Activated */
+    .slide-from-top.active,
+    .slide-from-bottom.active {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* CAROUSEL */
+        .focus-photos {
+            display: flex;
+            flex-direction: column;
+            gap: 36px;
+            position: relative;
+            overflow: hidden;
+            background-color: var(--gms-white);
+        }
+
+        .carousel-viewport {
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .carousel-track {
+            display: flex;
+            transition: transform 0.6s ease-in-out;
+        }
+
+        .carousel-slide {
+            flex: 0 0 100%;
+            text-align: center;
+        }
+
+        .carousel-slide img {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+        }
+
+        .img-desc {
+            margin-top: 10px;
+            font-size: 0.95rem;
+            color: #333;
+        }
+
+        /* ARROWS */
+        .photo-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.5);
+            color: #fff;
+            border: none;
+            padding: 10px 14px;
+            cursor: pointer;
+            z-index: 10;
+            border-radius: 50%;
+        }
+
+        .photo-arrow.left { left: 10px; }
+        .photo-arrow.right { right: 10px; }
+
+        .photo-arrow:hover {
+            background: rgba(0,0,0,0.75);
+        }
+
+        .outro-quote {
+            margin-top: 20px;
+            font-style: italic;
+            color: #a1a881;
+        }
+
+        /* approach section */
+        .approach-section {
+            background-image: url("{% static 'images/bg-14.png' %}");
+            display: flex;
+            flex-direction: column;
+        }
+
+        .approach-title h2 {
+            text-align: center;
+            padding: 0px 20px 20px;
+        }
+
+        .approach-section {
+            padding: 80px 5%;
+            background-image: url("{% static 'images/bg-14.png' %}");
+            background-color: #f9f9f7;
+        }
+
+        .prog-goals-sec {
+            display: flex;
+            align-items: stretch; /* Ensures box height equals tabs height */
+            gap: 0; 
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Tabs Sidebar */
+        .approach-tabs {
+            flex: 0 0 320px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 2;
+        }
+
+        .tab-item {
+            background: white;
+            padding: 22px 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            color: #1a3a2a;
+            border-radius: 8px 0 0 8px; 
+        }
+
+        .tab-icon {
+            color: var(--gms-green);
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        /* Active Tab with Polygon Shape */
+        .tab-item.active {
+            background-color: var(--gms-green);
+            color: white;
+            clip-path: polygon(0% 0%, 88% 0%, 100% 50%, 88% 100%, 0% 100%);
+            padding-right: 45px;
+        }
+
+
+        .tab-item.active .tab-icon {
+            color: white;
+        }
+
+        /* Content Box Animation */
+        .approach-content-box {
+            flex: 1;
+            background: white;
+            margin-left: 30px; 
+            padding: 60px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .slide-in-right {
+            animation: cardSlideEffect 0.6s cubic-bezier(0.23, 1, 0.32, 1) both;
+        }
+
+        @keyframes cardSlideEffect {
+            0% {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .approach-panel {
+            display: none;
+        }
+
+        .approach-panel.active {
+            display: block;
+        }
+
+        .approach-panel h3 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #1a3a2a;
+        }
+
+        .approach-panel p {
+            line-height: 1.8;
+            color: #444;
+            margin-bottom: 20px;
+        }
+
+        .heart-accent {
+            position: absolute;
+            bottom: 0px;
+            right: 0px;
+            width: 200px;
+            pointer-events: none;
+        }
+
+        @media (max-width: 992px) {
+            .prog-goals-sec { flex-direction: column; }
+            .approach-tabs { flex: 1; width: 100%; }
+            .tab-item.active { clip-path: none; border-radius: 8px; }
+            .approach-content-box { margin-left: 0; margin-top: 20px; }
+        }
+
+        /* Action Section */
+
+        .our-actions {
+            background-image: url("{% static 'images/bg-14.png' %}");
+            padding: 80px 20px;
+        }
+
+        /* TOP LAYOUT */
+        .actions-top {
+            max-width: 1200px;
+            margin: 0 auto 60px;
+            display: grid;
+            grid-template-columns: 1.3fr 0.7fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        /* TEXT */
+        .actions-text h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #163d2c;
+            margin-bottom: 20px;
+        }
+
+        .actions-text p {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: #555;
+            margin-bottom: 16px;
+        }
+
+        /* IMAGE */
+        .actions-image {
+            display: flex;
+            justify-content: center;
+        }
+
+        .image-circle {
+            position: relative;
+            padding: 10px;
+            border-radius: 50%;
+            border: 2px dashed var(--gms-orange);
+        }
+
+        .image-circle img {
+            width: 320px;
+            height: 320px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        /* STATS */
+        .actions-stats {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .actions-stats h3 {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            color: #163d2c;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .stat-percent {
+            color: var(--gms-green);
+        }
+
+        .stat-bar {
+            height: 12px;
+            background: #e5f4ec;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .stat-fill {
+            height: 100%;
+            background: linear-gradient(
+                to right,
+                var(--gms-green),
+                #39d27d
+            );
+            border-radius: 10px;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 992px) {
+            .actions-top {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .image-circle img {
+                width: 260px;
+                height: 260px;
+            }
+        }
+
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .carousel-slide img {
+                height: 200px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .focus-box {
+                grid-template-columns: 1fr;
+            }
+
+            .banner-content {
+                height: 280px;
+            }
+        }
+
+ 
+</style>
 {% endblock %}
 
 
 {% block content %}
+<section class="what-we-do">
+        <div class="banner-content">
+            <h3>What We Do</h3>
+            
+        </div>
+
+        <div class="focus-area">
+            <div class="title-sec">
+                <h2>Our Focus Areas</h2>
+            </div>
+            <div class="focus-box">
+                <div class="focus-photos slide-from-top">
+
+                    <button class="photo-arrow left" aria-label="Previous">
+                        &#10094;
+                    </button>
+
+                    <div class="carousel-viewport">
+                        <div class="carousel-track">
+                            <div class="carousel-slide">
+                                <img src="{% static 'images/image-5.jpeg' %}" alt="">
+                                <p class="img-desc">
+                                    Children in West Pokot lift Jerrican in search of water - 
+                                    a daily reminder of their struggle for clean water. Learners walk 
+                                    a Long in search of water instead of attending Lessons. 
+                                </p>
+                            </div>
+
+                            <div class="carousel-slide">
+                                <img src="{% static 'images/image-3.jpeg' %}" alt="">
+                                <p class="img-desc">
+                                    Between a well and a classroom: The impossible choice for many children: Fetching water or
+                                    getting an education.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="photo-arrow right" aria-label="Next">
+                        &#10095;
+                    </button>
+
+                    <div class="outro-quote">
+                        <p>
+                            Small actions. Big impact. These projects offer immediate, visible change — simple yet powerful steps toward healthier, empowered communities in West Pokot.
+                        </p>
+                    </div>
+
+                </div>
+
+                <div class="focus-content slide-from-bottom">
+                    <h3>💧 Water Scarcity in West Pokot: A Daily Struggle for Learners</h3>
+                    <br>
+                    <p><strong>Between a Well and a Classroom:</strong> This is the impossible choice facing children in West Pokot, where the daily trek for water steals hours from learning and play.</p>
+                    <br>
+                    <p>This crisis creates a ripple effect: without clean water, school meals cannot be prepared, proper hygiene is impossible, and girls often miss class during their menstrual cycles.</p>
+                    <br>
+                    <p>This is why access to safe water is the foundation of our integrated School WASH, Feeding, and Menstrual Hygiene Management (MHM) programs. Your support can build this foundation—by installing boreholes, rainwater harvesting systems, and solar-powered pumps. These are the sustainable solutions that break the cycle.</p>
+                    <br>
+                    <p><strong>Together, we can end this impossible choice and turn every drop into hope for a brighter, more educated future.</strong></p>
+                </div>
+
+            </div>
+
+            <div class="approach-section">
+                <div class="approach-title">
+                    <h2>Our Approach</h2>
+                </div>
+
+                <div class="prog-goals-sec">
+                    <div class="approach-tabs">
+                        <div class="tab-item active" onclick="showApproach('sfp', this)">
+                            <div class="tab-icon"><i class="fa-solid fa-hands-holding-child"></i></div>
+                            <span>School Feeding Program</span>
+                        </div>
+                        <div class="tab-item" onclick="showApproach('wash', this)">
+                            <div class="tab-icon"><i class="fa-solid fa-faucet-drip"></i></div>
+                            <span>School WASH (Water, Sanitation & Hygiene)</span>
+                        </div>
+                        <div class="tab-item" onclick="showApproach('mhm', this)">
+                            <div class="tab-icon"><i class="fa-solid fa-person-dress"></i></div>
+                            <span>Menstrual Hygiene Management (MHM)</span>
+                        </div>
+                        <div class="tab-item" onclick="showApproach('cep', this)">
+                            <div class="tab-icon"><i class="fa-solid fa-users-gear"></i></div>
+                            <span>Community Empowerment & Partnerships</span>
+                        </div>
+                        <div class="tab-item" onclick="showApproach('eci', this)">
+                            <div class="tab-icon"><i class="fa-solid fa-tree"></i></div>
+                            <span>Environmental Conservation</span>
+                        </div>
+                    </div>
+
+                    <div class="approach-content-box" id="contentBox">
+                        <div id="sfp" class="approach-panel active">
+                            <h3>SFP</h3>
+                            <p>A nutritious meal is the simplest, most effective way to keep children in school. Many learners in West Pokot attend classes hungry, affecting focus and attendance. Supporting school feeding ensures children receive daily meals, improving learning outcomes and retention. With modest investment, donors can help local schools provide porridge or lunch programs using locally sourced foods. The results are immediate — increased attendance, better performance, and healthier children. Your contribution directly feeds hope, fuels dreams, and creates an environment where every child has the energy to learn and thrive.</p>
+                            
+                        </div>
+
+                        <div id="wash" class="approach-panel">
+                            <h3>WSH</h3>
+                            <p>Access to safe water and proper sanitation is fundamental for learning and health. Many schools in West Pokot still rely on distant or unsafe sources, forcing children to walk long distances daily. Donor support toward installing rainwater harvesting tanks, handwashing stations, or simple boreholes can provide instant relief. These low-cost interventions improve hygiene, reduce disease, and strengthen school feeding and menstrual hygiene programs. With every system installed, we create a ripple effect — healthier children, cleaner schools, and stronger communities. Quick investments here generate long-term change, ensuring every child learns in safety, dignity, and good health.</p>
+                        </div>
+
+                        <div id="mhm" class="approach-panel">
+                            <h3>MHM</h3>
+                            <p>Menstrual hygiene remains a silent barrier to education for many girls in West Pokot. By supporting local production and distribution of reusable pads, donors can make an immediate, visible difference. This initiative not only provides affordable menstrual products but also restores dignity, boosts attendance, and empowers women’s groups economically. With basic sewing machines, training, and awareness campaigns, this program ensures sustainability and ownership within the community. Each donation keeps girls in school, promotes gender equality, and breaks the silence surrounding menstruation. It’s a simple, low-cost intervention with life-changing impact — where every contribution counts toward a girl’s future.</p>
+                        </div>
+
+                        <div id="cep" class="approach-panel">
+                            <h3>CEP</h3>
+                            <p>Foster collaboration with local governments, NGOs, and women’s groups to strengthen capacity and sustainability. Build skills, share data, and encourage community ownership to drive long-term impact, policy influence, and collective responsibility for improved education and health outcomes.</p>
+                        </div>
+
+                        <div id="eci" class="approach-panel">
+                            <h3>ECI</h3>
+                            <p>Our conservation efforts focus on practical, community-led actions that deliver quick impact. Through tree planting in schools, establishment of kitchen gardens, and waste management campaigns, we promote sustainability while enhancing food security and climate resilience. Each tree planted provides shade, clean air, and soil protection — improving the school environment and engaging learners in stewardship of the planet. Donor support will help expand these green initiatives across more schools, providing seedlings, tools, and training. Together, we can nurture a greener West Pokot and create learning spaces that inspire responsibility, sustainability, and growth for generations to come.</p>
+                        </div>
+                        
+                        <div class="heart-accent">
+                            <img src="{% static 'images/bg-12.png' %}" alt="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="our-actions">
+
+                <!-- TOP CONTENT -->
+                <div class="actions-top">
+
+                    <!-- LEFT TEXT -->
+                    <div class="actions-text">
+                        <h2>The care for today that brightens tomorrow</h2>
+
+                        <p>
+                            In a needy community, many children face hunger, poor sanitation, and limited access to menstrual hygiene,
+                            keeping them out of school and limiting their potential. At Global Mission Service (GMS), we provide
+                            nutritious school meals, clean water, and menstrual hygiene support to ensure every child learns in dignity.
+                        </p>
+
+                        <p>
+                            Your donation helps us nourish young minds, keep girls in school, and build healthier, empowered
+                            communities. Together, we can turn need into opportunity and dreams into reality.
+                            Donate today — because every child deserves the chance to learn, grow, and thrive.
+                        </p>
+                    </div>
+
+                    <!-- RIGHT IMAGE -->
+                    <div class="actions-image">
+                        <div class="image-circle">
+                            <img src="{% static 'images/image-2.jpeg' %}" alt="Children gathering at school">
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- STATS -->
+                <div class="actions-stats">
+
+                    <h3>Our Projects implementation Success statistics</h3>
+
+                    <div class="stats-grid">
+
+                        <div class="stat-item">
+                            <div class="stat-header">
+                                <span>Menstrual Hygiene Management (MHM)</span>
+                                <span class="stat-percent">60%</span>
+                            </div>
+                            <div class="stat-bar">
+                                <div class="stat-fill" style="width:60%"></div>
+                            </div>
+                        </div>
+
+                        <div class="stat-item">
+                            <div class="stat-header">
+                                <span>School Feeding Program</span>
+                                <span class="stat-percent">70%</span>
+                            </div>
+                            <div class="stat-bar">
+                                <div class="stat-fill" style="width:70%"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+</section>
 {% endblock %}
 
 {% block extra_js %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document
+                .querySelectorAll('.slide-from-top, .slide-from-bottom')
+                .forEach(el => el.classList.add('active'));
+        });
+
+        // photo slider logic
+        const track = document.querySelector('.carousel-track');
+        const slides = document.querySelectorAll('.carousel-slide');
+        const prevBtn = document.querySelector('.photo-arrow.left');
+        const nextBtn = document.querySelector('.photo-arrow.right');
+
+        let currentIndex = 0;
+
+        function updateCarousel() {
+            track.style.transform = `translateX(-${currentIndex * 100}%)`;
+        }
+
+        prevBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+            updateCarousel();
+        });
+
+        nextBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % slides.length;
+            updateCarousel();
+        });
+
+        // Auto-slide every 6 seconds (optional)
+        setInterval(() => {
+            currentIndex = (currentIndex + 1) % slides.length;
+            updateCarousel();
+        }, 6000);
+
+        // approach section tab logic
+        function showApproach(id, element) {
+            const contentBox = document.getElementById('contentBox');
+            
+            // 1. Reset the animation by removing/re-adding the class
+            contentBox.classList.remove('slide-in-right');
+            void contentBox.offsetWidth; // Trigger reflow to restart animation
+            contentBox.classList.add('slide-in-right');
+
+            // 2. Update Tab Active State
+            document.querySelectorAll('.tab-item').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            element.classList.add('active');
+
+            // 3. Update Content Panel Active State
+            document.querySelectorAll('.approach-panel').forEach(panel => {
+                panel.classList.remove('active');
+            });
+            
+            document.getElementById(id).classList.add('active');
+        }
+
+        // Initialize the first animation on load
+        window.onload = () => {
+            document.getElementById('contentBox').classList.add('slide-in-right');
+        };
+
+        // Action script
+
+        const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const fills = entry.target.querySelectorAll('.progress-fill');
+                fills.forEach(fill => {
+                    const width = fill.style.width;
+                    fill.style.width = '0';
+                    setTimeout(() => {
+                        fill.style.width = width;
+                    }, 100);
+                });
+            }
+        });
+    }, { threshold: 0.5 });
+
+    observer.observe(document.querySelector('.our-actions'));
+    
+    </script>
+
 {% endblock %}

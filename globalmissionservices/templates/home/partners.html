@@ -1,13 +1,251 @@
 {% extends "home/base.html" %}
 {% load static %}
 
-{% block title %}Partners - Global Mission Services{% endblock %}
+{% block title %}Partner With Us - Global Mission Services{% endblock %}
 
 {% block extra_css %}
+<style>
+/* =========================
+   HERO SECTION
+========================= */
+.partners-hero {
+    background: url("{% static 'images/partner-hero.jpg' %}") center/cover no-repeat;
+    height: 320px;
+    position: relative;
+}
+
+.partners-hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    text-align: center;
+}
+
+.hero-content h1 {
+    font-size: 2.6rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.breadcrumb {
+    border: 1px solid var(--gms-orange);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+}
+
+/* =========================
+   MAIN SECTION
+========================= */
+.partners {
+    background: #fff;
+    padding: 80px 20px;
+}
+
+.partners-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: #fff7ee;
+    border-radius: 24px;
+    padding: 60px;
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 60px;
+}
+
+/* =========================
+   LEFT CONTENT
+========================= */
+.partners-info h2 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+}
+
+.partners-info p {
+    color: #555;
+    line-height: 1.7;
+    margin-bottom: 20px;
+}
+
+.partners-info ul {
+    background: #fff;
+    padding: 20px 24px;
+    border-left: 4px solid var(--gms-orange);
+    margin-bottom: 30px;
+}
+
+.partners-info li {
+    margin-bottom: 10px;
+    font-style: italic;
+    color: #444;
+}
+
+/* IMAGE GRID */
+.partners-images {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.partners-images img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+/* =========================
+   FORM
+========================= */
+.partners-form h2 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: none;
+    background: #fff;
+    font-size: 0.95rem;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.partners-form button {
+    background: var(--gms-green);
+    color: #fff;
+    border: none;
+    padding: 14px 28px;
+    border-radius: 30px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 992px) {
+    .partners-wrapper {
+        grid-template-columns: 1fr;
+        padding: 40px 20px;
+    }
+
+    .partners-images {
+        grid-template-columns: 1fr;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-content h1 {
+        font-size: 2rem;
+    }
+}
+</style>
 {% endblock %}
 
-
 {% block content %}
+
+<!-- HERO -->
+<section class="partners-hero">
+    <div class="hero-content">
+        <h1>Partner With Us</h1>
+        <div class="breadcrumb">Home / Partner With Us</div>
+    </div>
+</section>
+
+<!-- MAIN -->
+<section class="partners">
+    <div class="partners-wrapper">
+
+        <!-- LEFT -->
+        <div class="partners-info">
+            <h2>Partner With Us</h2>
+            <p>
+                If you feel inspired by our mission, vision, and work, you can get involved by helping us
+                through donations, volunteering, or any other way by filling out the form.
+            </p>
+
+            <ul>
+                <li>You have a passion to do meaningful work that makes positive change in the world.</li>
+                <li>You are deeply interested in the welfare of other people just as your own.</li>
+            </ul>
+
+            <div class="partners-images">
+                <img src="{% static 'images/campaign-05.jpg' %}" alt="">
+                <img src="{% static 'images/campaign-06.jpg' %}" alt="">
+            </div>
+        </div>
+
+        <!-- RIGHT -->
+        <div class="partners-form">
+            <h2>Partner as a Volunteer</h2>
+
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <input type="text" placeholder="Your Name">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <input type="email" placeholder="Email Address">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" placeholder="Phone Number">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <input type="text" placeholder="Address">
+                </div>
+
+                <div class="form-group">
+                    <input type="date" placeholder="Date">
+                </div>
+
+                <div class="form-group">
+                    <input type="text" placeholder="Occupation">
+                </div>
+
+                <div class="form-group">
+                    <textarea rows="4" placeholder="Write a Message"></textarea>
+                </div>
+
+                <button type="submit">Register Now</button>
+            </form>
+        </div>
+
+    </div>
+</section>
+
 {% endblock %}
 
 {% block extra_js %}
