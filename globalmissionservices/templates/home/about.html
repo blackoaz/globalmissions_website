@@ -1,14 +1,469 @@
 {% extends "home/base.html" %}
 {% load static %}
 
-{% block title %}About Us - Global Mission Services{% endblock %}
+{% block title %}Who We Are | Global Mission Services Kenya{% endblock %}
 
 {% block extra_css %}
+<style>
+
+/* =========================
+   GLOBAL PAGE STYLES
+========================= */
+.about-page {
+    background-color: #f9f9f7;
+    background-image: url("{% static 'images/bg-14.png' %}");
+    background-attachment: fixed;
+    color: #1a3a2a;
+}
+
+.container-wide {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* =========================
+   HERO SECTION
+========================= */
+.about-hero {
+    height: 320px;
+    background: url("{% static 'images/picture1.png' %}") center/cover no-repeat;
+    position: relative;
+}
+
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        rgba(255,255,255,0.65),
+        rgba(255,255,255,0.85)
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-overlay h1 {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: #00ab55;
+    letter-spacing: -1px;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.15);
+}
+
+/* =========================
+   STORY LAYOUT (MISSION → VALUES)
+========================= */
+.about-story-section {
+    padding: 80px 0;
+}
+
+.story-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 60px;
+    align-items: stretch;
+}
+
+.story-content {
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+}
+
+/* RIGHT IMAGE */
+.story-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 24px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+}
+
+/* =========================
+   MISSION & VISION
+========================= */
+.mission-vision-section h2 {
+    font-size: 2.3rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.mission-vision-section p {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+/* =========================
+   CORE VALUES
+========================= */
+.core-values-section h2 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 30px;
+}
+
+.values-slider-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    min-height: 350px;
+}
+
+.slider-arrow {
+    background: none;
+    border: none;
+    font-size: 1.6rem;
+    color: #ccc;
+    cursor: pointer;
+    padding: 10px;
+    transition: color 0.3s ease;
+}
+
+.slider-arrow:hover {
+    color: var(--gms-green);
+}
+
+.values-container {
+    background: white;
+    padding: 60px;
+    width: 85%;
+    border-radius: 12px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.06);
+}
+
+
+.values-track {
+    position: relative;
+    height: 260px;
+}
+
+.value-card {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.value-card h3 {
+    font-size: 1.4rem;
+    margin-bottom: 12px;
+}
+
+.value-card p {
+    font-size: 1.05rem;
+    line-height: 1.75;
+    max-width: 95%;
+}
+
+
+.value-card.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.value-num {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #eee;
+    display: block;
+}
+
+.green-accent-bar {
+    width: 12px;
+    height: 180px;
+    background-color: var(--gms-green);
+    border-radius: 10px;
+}
+
+/* =========================
+   IMPACT QUOTE
+========================= */
+.impact-quote {
+    margin-top: 40px;
+    padding: 25px;
+    max-width: 60%;
+    background: white;
+    border-left: 5px solid var(--gms-orange);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+    font-size: 1.05rem;
+    line-height: 1.7;
+}
+
+/* =========================
+   TEAM SECTION
+========================= */
+.team-section {
+    padding: 80px 0;
+}
+
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+}
+
+.img-frame {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid white;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.img-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.member-info h4 {
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.member-info span {
+    display: block;
+    font-weight: 600;
+    color: #777;
+    margin-bottom: 6px;
+}
+
+.member-info a {
+    font-size: 0.9rem;
+    color: #00ab55;
+    text-decoration: none;
+}
+
+.member-info a:hover {
+    text-decoration: underline;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 992px) {
+    .story-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .values-container,
+    .impact-quote {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .team-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-overlay h1 {
+        font-size: 2.5rem;
+    }
+}
+
+</style>
 {% endblock %}
 
-
 {% block content %}
+<main class="about-page">
+
+    <!-- HERO -->
+    <section class="about-hero">
+        <div class="hero-overlay">
+            <h1>Who We Are</h1>
+        </div>
+    </section>
+
+    <div class="container-wide">
+
+        <!-- STORY SECTION -->
+        <section class="about-story-section">
+            <div class="story-grid">
+
+                <!-- LEFT CONTENT -->
+                <div class="story-content">
+
+                    <section class="mission-vision-section">
+                        <h2>Organizational Mission and Vision</h2>
+                        <p>
+                            Unfulfilled aspirations have caused hardship 
+                            for many, especially those from economically 
+                            disadvantaged backgrounds. Societal structures 
+                            often suppress these dreams instead of fostering 
+                            an environment that supports them.
+                        </p>
+                        <p>
+                            As a result, some abandon their aspirations and turn to escapism,
+                            which can lead to greater regret.
+                        </p>
+                        <p>
+                            In response to these challenges, Global Mission Services 
+                            Kenya (GMS-K) Charitable Trust was established to provide 
+                            a platform for identifying marginalized and underprivileged 
+                            children in Kenyan and international communities, aiming to 
+                            restore purpose through actions anchored in love.
+                        </p>
+                    </section>
+
+                    <section class="core-values-section">
+                        <h2>Our Core Values</h2>
+
+                        <div class="values-slider-wrapper">
+                            <button class="slider-arrow" onclick="changeValue(-1)">
+                                <i class="fa-solid fa-chevron-left"></i>
+                            </button>
+
+                            <div class="values-container">
+                                <div class="values-track">
+
+                                    <div class="value-card active">
+                                        <span class="value-num">01</span>
+                                        <h3>Holistic Empowerment</h3>
+                                        <p>We address the whole child, recognizing that education is 
+                                            achieved not only through feeding the mind but also by 
+                                            nurturing the body with school meals, ensuring dignity 
+                                            through menstrual care, and providing a safe, healthy 
+                                            environment with clean water and sanitation.
+                                        </p>
+                                    </div>
+
+                                    <div class="value-card">
+                                        <span class="value-num">02</span>
+                                        <h3>Sustainable Impact</h3>
+                                        <p>
+                                            Our initiatives are designed for long-term success. 
+                                            This is reflected in our environmental conservation 
+                                            efforts, training local women's groups to produce reusable pads,
+                                            and building WASH facilities anchored in community ownership and 
+                                            government partnerships for lasting change.
+                                        </p>
+                                    </div>
+
+                                    <div class="value-card">
+                                        <span class="value-num">03</span>
+                                        <h3>Dignity and Inclusion</h3>
+                                        <p>We believe every child deserves to learn with safety and 
+                                            self-respect. This drives our commitment to gender-sensitive 
+                                            latrines, breaking the silence on menstruation, and ensuring 
+                                            all children, especially the most marginalized, have what they 
+                                            need to thrive in school.
+                                        </p>
+                                    </div>
+
+                                    <div class="value-card">
+                                        <span class="value-num">04</span>
+                                        <h3>Collaborative Partnership</h3>
+                                        <p>
+                                            We achieve more together. Our work is built on active coordination 
+                                            with communities, governments, women's groups, and other stakeholders, 
+                                            sharing best practices and leveraging collective expertise to create a 
+                                            unified front for children's welfare.
+                                        </p>
+                                    </div>
+
+                                    <div class="value-card">
+                                        <span class="value-num">05</span>
+                                        <h3>Evidence-Based Action</h3>
+                                        <p>
+                                            We are committed to data-driven decisions. 
+                                            Through rigorous Monitoring &amp; Evaluation, 
+                                            needs assessments, and learning from both successes 
+                                            and gaps, we ensure our interventions are effective, 
+                                            accountable, and continuously improved.
+                                        </p>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <button class="slider-arrow" onclick="changeValue(1)">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </button>
+
+                            <div class="green-accent-bar"></div>
+                        </div>
+
+                        <div class="impact-quote">
+                            <strong>Small actions. Big impact.</strong>
+                            These projects create visible change in West Pokot communities.
+                        </div>
+                    </section>
+
+                </div>
+
+                <!-- RIGHT IMAGE -->
+                <div class="story-image">
+                    <img src="{% static 'images/image-2.jpeg' %}" alt="Children in the community">
+                </div>
+
+            </div>
+        </section>
+
+        <!-- TEAM -->
+        <section class="team-section">
+            <div class="team-grid">
+
+                <div class="team-member">
+                    <div class="img-frame">
+                        <img src="{% static 'images/juddy-200.png' %}">
+                    </div>
+                    <div class="member-info">
+                        <h4>Juddy Opiyo</h4>
+                        <span>Founding Director</span>
+                        <a href="#">Read message from the Director →</a>
+                    </div>
+                </div>
+
+                <div class="team-member">
+                    <div class="img-frame">
+                        <img src="{% static 'images/Ben-Obuya.jpeg' %}">
+                    </div>
+                    <div class="member-info">
+                        <h4>Benard Sigungu Omuya</h4>
+                        <span>Programs Water and Sanitation</span>
+                        <a href="#">Read message from the Director →</a>
+                    </div>
+                </div>
+
+                <div class="team-member">
+                    <div class="img-frame">
+                        <img src="{% static 'images/Elsen-cheruto-600x540.jpeg' %}">
+                    </div>
+                    <div class="member-info">
+                        <h4>Elsen Cheruto</h4>
+                        <span>Programs School Feeding ,Education and Gender.</span>
+                        <a href="#">Read message from the Director →</a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </div>
+</main>
 {% endblock %}
 
 {% block extra_js %}
+<script>
+let currentIndex = 0;
+const cards = document.querySelectorAll('.value-card');
+
+function changeValue(direction) {
+    cards[currentIndex].classList.remove('active');
+    currentIndex = (currentIndex + direction + cards.length) % cards.length;
+    cards[currentIndex].classList.add('active');
+}
+
+setInterval(() => changeValue(1), 7000);
+</script>
 {% endblock %}
